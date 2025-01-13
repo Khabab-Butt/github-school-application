@@ -24,9 +24,8 @@ jobs:
         restore-keys: ${{ runner.os }}-m2-
     - name: Configure Docker Service for TCP
       run: |
-        sc config docker binPath=^"C:\\Program Files\\Docker\\Docker\\resources\\bin\\dockerd.exe --run-service -H tcp://localhost:2375 -H npipe://^"
+        sc config docker binPath=^"C:\\Program Files\\Docker\\Docker\\resources\\bin\\dockerd.exe --run-service -H tcp://0.0.0.0:2375 -H npipe://^"
         Start-Service docker
-        Get-Service docker
     - name: Verify Docker Listening on TCP
       run: |
         netstat -an | findstr 2375
