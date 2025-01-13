@@ -24,7 +24,7 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
         restore-keys: ${{ runner.os }}-m2-
     - name: Configure Docker Service
-      run: sc config docker binpath="\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\dockerd.exe\" --run-service -H tcp://localhost:2375"
+      run: sc config docker binPath=^"C:\\Program Files\\Docker\\Docker\\resources\\bin\\dockerd.exe --run-service -H tcp://localhost:2375^"
     - name: Start Docker Service
       run: Start-Service docker
     - name: Verify Docker Service Status
