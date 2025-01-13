@@ -10,7 +10,6 @@ jobs:
     env:
       DOCKER_HOST: tcp://localhost:2375
 
-    name: Build in Windows
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 8
@@ -23,12 +22,14 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
         restore-keys: ${{ runner.os }}-m2-
-    - name: Configure Docker Service
-      run: sc config docker binPath=^"C:\\Program Files\\Docker\\Docker\\resources\\bin\\dockerd.exe --run-service -H tcp://localhost:2375^"
-    - name: Start Docker Service
-      run: Start-Service docker
-    - name: Verify Docker Service Status
-      run: Get-Service docker
+    - name: Configure Docker Service for TCP
+      run: |
+        sc config docker binPath=^"C:\\Program Files\\Docker\\Docker\\resources\\bin\\dockerd.exe --run-service -H tcp://localhost:2375 -H npipe://^"
+        Start-Service docker
+        Get-Service docker
+    - name: Verify Docker Listening on TCP
+      run: |
+        netstat -an | findstr 2375
     - name: Docker info
       run: docker info
     - name: Build with Maven
